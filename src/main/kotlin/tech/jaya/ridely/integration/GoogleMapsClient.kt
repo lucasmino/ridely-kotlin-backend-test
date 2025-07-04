@@ -19,8 +19,8 @@ class GoogleMapsClient(@Value("\${google.maps.api.key}")
     ): RouteInfo {
         val url = UriComponentsBuilder
             .fromHttpUrl("https://maps.googleapis.com/maps/api/directions/json")
-            .queryParam("origin", "$originLat,$originLng")
-            .queryParam("destination", "$destLat,$destLng")
+            .queryParam("origin", "$originLat,$originLon")
+            .queryParam("destination", "$destLat,$destLon")
             .queryParam("key", apiKey)
             .build()
             .toUriString()
