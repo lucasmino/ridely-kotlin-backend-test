@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import tech.jaya.ridely.repository.DriverRepo
-import tech.jaya.ridely.repository.RideRepo
+import tech.jaya.ridely.domain.repository.DriverRepo
+import tech.jaya.ridely.domain.repository.RideRepo
 
 @RestController
 @RequestMapping("/drivers")

@@ -1,9 +1,9 @@
 package tech.jaya.ridely.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import tech.jaya.ridely.model.Driver
-import tech.jaya.ridely.model.Ride
-import tech.jaya.ridely.model.Status
+import tech.jaya.ridely.domain.model.Driver
+import tech.jaya.ridely.domain.model.Ride
+import tech.jaya.ridely.domain.model.Status
 import java.math.BigDecimal
 
 class PassengerRequest(

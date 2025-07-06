@@ -2,6 +2,7 @@ package tech.jaya.ridely
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import tech.jaya.ridely.service.RouteEstimationService
 
 @SpringBootApplication
 class RidelyApplication

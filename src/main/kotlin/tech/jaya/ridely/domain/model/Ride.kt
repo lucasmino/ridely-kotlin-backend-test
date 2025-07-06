@@ -1,4 +1,4 @@
-package tech.jaya.ridely.model
+package tech.jaya.ridely.domain.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
