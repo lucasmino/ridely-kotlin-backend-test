@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.domain.repository.RideRepo
+import tech.jaya.ridely.dto.LatLng
 
 @RestController
 @RequestMapping("/drivers")
@@ -47,5 +48,10 @@ class DriverController(
         return driverRepo.deleteById(id).let {
             ResponseEntity.noContent().build()
         }
+    }
+
+    @PostMapping
+    fun updateLocation(@PathVariable id: Long, @RequestBody location: LatLng) {
+
     }
 }

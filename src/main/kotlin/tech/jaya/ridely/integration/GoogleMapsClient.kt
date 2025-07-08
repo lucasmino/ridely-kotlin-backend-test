@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import tech.jaya.ridely.dto.DirectionsResponse
+import tech.jaya.ridely.dto.RouteInfo
+import java.math.BigDecimal
 
 @Service
 
@@ -34,8 +36,9 @@ class GoogleMapsClient(@Value("\${google.maps.api.key}")
         val leg = route.legs.first()
 
         return RouteInfo(
-            tempoEstimadoMinutos = leg.duration.value / 60,
-            distanciaKm = leg.distance.value / 1000.0
+            estimatedTimeMinutes = leg.duration.value / 60,
+            distanceKm = leg.distance.value / 1000.0
+
         )
     }
 }
