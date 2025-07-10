@@ -1,11 +1,12 @@
 package tech.jaya.ridely.service
 
-import tech.jaya.ridely.dto.RouteInfo
+import org.springframework.stereotype.Service
+import tech.jaya.ridely.dto.trip.RouteInfo
 import java.math.BigDecimal
 import java.math.RoundingMode
-
+@Service
 class PriceCalculatorService {
-    fun CalculatePrice(routeInfo: RouteInfo): BigDecimal {
+    fun calculatePrice(routeInfo: RouteInfo): BigDecimal {
         val kmCost = BigDecimal(routeInfo.distanceKm).multiply(BigDecimal("3.00"))
         val minCost = BigDecimal(routeInfo.estimatedTimeMinutes).multiply(BigDecimal("2.00"))
         val total = kmCost.add(minCost)

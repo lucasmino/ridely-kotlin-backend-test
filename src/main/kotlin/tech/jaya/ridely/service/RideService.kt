@@ -2,19 +2,17 @@ package tech.jaya.ridely.service
 
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import tech.jaya.ridely.controller.AcceptResponse
-import tech.jaya.ridely.controller.ActionRideRequest
-import tech.jaya.ridely.controller.CancelResponse
+import tech.jaya.ridely.dto.driver.AcceptResponse
+import tech.jaya.ridely.dto.driver.ActionRideRequest
+import tech.jaya.ridely.dto.driver.CancelResponse
 import tech.jaya.ridely.controller.DriverUnavailable
-import tech.jaya.ridely.controller.FinishResponse
-import tech.jaya.ridely.controller.FinishRideRequest
-import tech.jaya.ridely.controller.RefuseResponse
-import tech.jaya.ridely.controller.RequestDriver
-import tech.jaya.ridely.controller.RequestDriverResponse
+import tech.jaya.ridely.dto.driver.FinishResponse
+import tech.jaya.ridely.dto.driver.FinishRideRequest
+import tech.jaya.ridely.dto.driver.RefuseResponse
+import tech.jaya.ridely.dto.driver.RequestDriver
+import tech.jaya.ridely.dto.driver.RequestDriverResponse
 import tech.jaya.ridely.controller.RideNotFoundException
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.domain.repository.RideRepo

@@ -19,6 +19,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://repo.spring.io/milestone") }
 }
 
 dependencies {
@@ -44,7 +45,19 @@ dependencies {
 	runtimeOnly("org.flywaydb:flyway-mysql:$flywayVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	//aws tools
+	implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:3.0.2")
+
+	implementation("me.paulschwarz:spring-dotenv:3.0.0")
+
+
 }
+
+//tasks.test {
+//	ignoreFailures = true
+//}
+
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {

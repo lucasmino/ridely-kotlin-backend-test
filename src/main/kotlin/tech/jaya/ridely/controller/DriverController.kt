@@ -7,16 +7,23 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.domain.repository.RideRepo
-import tech.jaya.ridely.dto.LatLng
+import tech.jaya.ridely.dto.driver.AcceptResponse
+import tech.jaya.ridely.dto.trip.DriverCreation
+import tech.jaya.ridely.dto.trip.DriverResponse
+import tech.jaya.ridely.dto.trip.LatLng
+import tech.jaya.ridely.dto.trip.toResponse
+import tech.jaya.ridely.integration.DriverLocationProducer
 
 @RestController
 @RequestMapping("/drivers")
 class DriverController(
     private val driverRepo: DriverRepo,
-    private val rideRepo: RideRepo
+    private val rideRepo: RideRepo,
+    private val driverLocationProducer: DriverLocationProducer
 ) {
 
     @GetMapping("/{id}")
@@ -38,6 +45,7 @@ class DriverController(
 
     @PostMapping
     fun save(@RequestBody driverRequest: DriverCreation): ResponseEntity<DriverResponse> {
+        println("🚗 RECEIVED: $driverRequest")
         return driverRepo.save(driverRequest.toDriver()).let {
             ResponseEntity.ok(it.toResponse())
         }
@@ -50,8 +58,8 @@ class DriverController(
         }
     }
 
-    @PostMapping
-    fun updateLocation(@PathVariable id: Long, @RequestBody location: LatLng) {
-
+    @PostMapping("/drivers/{id}/location")
+    fun updateLocation(@PathVariable id: String, @RequestParam lat: Double, @RequestParam long: Double) {
+        driverLocationProducer.sendLocation(id, LatLng(lat, long))
     }
 }

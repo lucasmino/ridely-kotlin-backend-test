@@ -1,4 +1,4 @@
-package tech.jaya.ridely.controller
+package tech.jaya.ridely.dto.driver
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import tech.jaya.ridely.domain.model.Driver

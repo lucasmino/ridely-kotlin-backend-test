@@ -1,6 +1,4 @@
-package tech.jaya.ridely.dto
-
-import java.math.BigDecimal
+package tech.jaya.ridely.dto.trip
 
 data class RouteInfo(
     val estimatedTimeMinutes: Int,
