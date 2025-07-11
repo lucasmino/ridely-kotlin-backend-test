@@ -70,4 +70,7 @@ class RideController(
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
         return rideService.delete(id)
     }
+//
+//    @GetMapping
+//    fun findDriversNear()
 }

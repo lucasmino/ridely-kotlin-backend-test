@@ -10,3 +10,5 @@ Consultar (receber) mensagens de uma fila (1 ou mais mensagens):
 aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/driver-location-test-queue --max-number-of-messages 10
 
 
+
+Retornar também

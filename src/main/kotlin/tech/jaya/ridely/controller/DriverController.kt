@@ -9,21 +9,25 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import tech.jaya.ridely.domain.model.Driver
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.domain.repository.RideRepo
 import tech.jaya.ridely.dto.driver.AcceptResponse
+import tech.jaya.ridely.dto.driver.DriverLocationDto
 import tech.jaya.ridely.dto.trip.DriverCreation
 import tech.jaya.ridely.dto.trip.DriverResponse
 import tech.jaya.ridely.dto.trip.LatLng
 import tech.jaya.ridely.dto.trip.toResponse
 import tech.jaya.ridely.integration.DriverLocationProducer
+import tech.jaya.ridely.service.FindDriversNearService
 
 @RestController
 @RequestMapping("/drivers")
 class DriverController(
     private val driverRepo: DriverRepo,
     private val rideRepo: RideRepo,
-    private val driverLocationProducer: DriverLocationProducer
+    private val driverLocationProducer: DriverLocationProducer,
+    private val findDriversNearService: FindDriversNearService
 ) {
 
     @GetMapping("/{id}")
@@ -61,5 +65,10 @@ class DriverController(
     @PostMapping("/drivers/{id}/location")
     fun updateLocation(@PathVariable id: String, @RequestParam lat: Double, @RequestParam long: Double) {
         driverLocationProducer.sendLocation(id, LatLng(lat, long))
+    }
+
+    @GetMapping("/drivers/near")
+    fun getDriversNearByLocation(@RequestParam lat: Double, @RequestParam long: Double ):List<DriverLocationDto> {
+        return findDriversNearService.findDriversNear(lat, long)
     }
 }

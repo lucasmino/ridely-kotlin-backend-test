@@ -6,12 +6,13 @@ import org.springframework.data.geo.Point
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.domain.geo.Metrics
 import org.springframework.stereotype.Component
+import tech.jaya.ridely.dto.driver.DriverLocationDto
 
 @Component
 class DriverLocationRepository (
-    private val redisTemplate: StringRedisTemplate,
+    public val redisTemplate: StringRedisTemplate,
 ){
-    private val key = "driver:locations"
+    val key = "driver:locations"
 
     fun updateLocation(driverId: String, lat: Double, lng: Double) {
         val point = Point(lng, lat) // Redis espera (longitude, latitude)
@@ -25,13 +26,23 @@ class DriverLocationRepository (
         lat: Double,
         lng: Double,
         radiusMeters: Double
-    ): List<Long> {
+    ): List<DriverLocationDto> {
         val circle = Circle(Point(lng, lat), Distance(radiusMeters, Metrics.METERS))
 
         val geoResults = redisTemplate.opsForGeo().radius(key, circle)
 
-        return geoResults?.content
-            ?.mapNotNull { it.content.name?.toLongOrNull() }
-            ?: emptyList()
+        return geoResults?.content?.mapNotNull { result ->
+            val driverId = result.content.name
+            val position = redisTemplate.opsForGeo().position(key, driverId)
+            val point = position?.firstOrNull()
+
+            if (driverId != null && point != null) {
+                DriverLocationDto(
+                    driverId = driverId.toLong(),
+                    lat = point.y,
+                    lng = point.x
+                )
+            } else null
+        } ?: emptyList()
     }
 }
