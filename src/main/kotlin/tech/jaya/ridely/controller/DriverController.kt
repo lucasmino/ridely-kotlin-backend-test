@@ -18,8 +18,8 @@ import tech.jaya.ridely.dto.trip.DriverCreation
 import tech.jaya.ridely.dto.trip.DriverResponse
 import tech.jaya.ridely.dto.trip.LatLng
 import tech.jaya.ridely.dto.trip.toResponse
-import tech.jaya.ridely.integration.DriverLocationProducer
-import tech.jaya.ridely.service.FindDriversNearService
+import tech.jaya.ridely.integration.producer.DriverLocationProducer
+import tech.jaya.ridely.service.driver.FindDriversNearService
 
 @RestController
 @RequestMapping("/drivers")

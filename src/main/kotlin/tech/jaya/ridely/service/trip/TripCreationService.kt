@@ -1,18 +1,19 @@
-package tech.jaya.ridely.service
+package tech.jaya.ridely.service.trip
 
 import org.springframework.stereotype.Component
-import tech.jaya.ridely.domain.model.Driver
 import tech.jaya.ridely.domain.model.Ride
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.dto.trip.LatLng
-import tech.jaya.ridely.integration.GeocodingGateway
+import tech.jaya.ridely.integration.gateway.GeocodingGateway
+import tech.jaya.ridely.service.driver.FindDriversNearService
+import tech.jaya.ridely.service.driver.NearbyDriverAssemblerService
 
 @Component
 class TripCreationService(
     private val routeEstimationService: RouteEstimationService,
     private val findDriversNearService: FindDriversNearService,
     private val nearbyDriverAssemblerService: NearbyDriverAssemblerService,
-    private val addressFormater: GeocodingGateway
+    private val addressFormater: GeocodingGateway,
     private val driverRepo: DriverRepo
 ) {
     fun createTrip(origin: LatLng, dest: LatLng, chosenDriverId: Long): Ride {

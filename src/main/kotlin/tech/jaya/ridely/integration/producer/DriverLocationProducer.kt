@@ -1,4 +1,4 @@
-package tech.jaya.ridely.integration
+package tech.jaya.ridely.integration.producer
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

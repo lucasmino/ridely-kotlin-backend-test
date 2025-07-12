@@ -19,8 +19,8 @@ import tech.jaya.ridely.dto.driver.RequestDriver
 import tech.jaya.ridely.dto.driver.RequestDriverResponse
 import tech.jaya.ridely.dto.trip.LatLng
 import tech.jaya.ridely.dto.trip.TripEstimationResponse
-import tech.jaya.ridely.service.RideService
-import tech.jaya.ridely.service.RouteEstimationService
+import tech.jaya.ridely.service.ride.RideService
+import tech.jaya.ridely.service.trip.RouteEstimationService
 
 @RestController
 @RequestMapping("/rides")
@@ -70,7 +70,4 @@ class RideController(
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
         return rideService.delete(id)
     }
-//
-//    @GetMapping
-//    fun findDriversNear()
 }

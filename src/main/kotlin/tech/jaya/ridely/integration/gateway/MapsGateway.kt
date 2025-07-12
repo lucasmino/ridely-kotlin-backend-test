@@ -1,4 +1,4 @@
-package tech.jaya.ridely.integration
+package tech.jaya.ridely.integration.gateway
 
 import tech.jaya.ridely.dto.trip.RouteInfo
 

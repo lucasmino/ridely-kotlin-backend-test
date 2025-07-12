@@ -1,4 +1,4 @@
-package tech.jaya.ridely.integration.infra.config
+package tech.jaya.ridely.integration.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
