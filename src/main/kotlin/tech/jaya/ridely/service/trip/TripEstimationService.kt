@@ -6,12 +6,12 @@ import tech.jaya.ridely.dto.trip.LatLng
 import tech.jaya.ridely.dto.trip.RouteInfo
 import tech.jaya.ridely.dto.trip.TripEstimationResponse
 import tech.jaya.ridely.dto.trip.TripEstimationWithDriversResponse
-import tech.jaya.ridely.service.driver.FindDriversNearService
+import tech.jaya.ridely.integration.repository.DriverLocationRepository
 import tech.jaya.ridely.service.driver.NearbyDriverAssemblerService
 @Component
 class TripEstimationService(
     private val routeEstimation: RouteEstimationService,
-    private val findDriversNearService: FindDriversNearService,
+    private val driverLocationRepository: DriverLocationRepository,
     private val nearbyDriverAssemblerService: NearbyDriverAssemblerService,
     private val estimationPriceCalculatorService: PriceCalculatorService
 ) : Loggable() {
@@ -22,7 +22,7 @@ class TripEstimationService(
         return try {
             val route = routeEstimation.estimateTrip(origin, dest)
 
-            val driverLocations = findDriversNearService.findDriversNear(
+            val driverLocations = driverLocationRepository.findDriversNear(
                 origin.latitude,
                 origin.longitude
             )

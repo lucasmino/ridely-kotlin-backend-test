@@ -1,8 +1,6 @@
 usar jmeter
 comando para criar fila
->aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name driver-location-test-queue{
-                            "QueueUrl": "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/driver-location-test-queue"
-                        }
+>aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name driver-location-test-queue
 
  consultar filas criadas aws --endpoint-url=http://localhost:4566 sqs list-queues
 
@@ -10,5 +8,6 @@ Consultar (receber) mensagens de uma fila (1 ou mais mensagens):
 aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/driver-location-test-queue --max-number-of-messages 10
 
 
+comando para inserir localizações no redis manualmente
+GEOADD driver:locations -46.57421 -23.55052 1
 
-Retornar também

@@ -8,7 +8,7 @@ import tech.jaya.ridely.dto.trip.LatLng
 
 @Component
 class DriverLocationProducer(
-    private val sqsAsyncClient: SqsAsyncClient,  // troca aqui
+    private val sqsAsyncClient: SqsAsyncClient,
     @Value("\${aws.queue_url}")
     private val queueUrl: String
 ) {

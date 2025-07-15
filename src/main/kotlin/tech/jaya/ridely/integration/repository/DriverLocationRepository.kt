@@ -1,30 +1,43 @@
 package tech.jaya.ridely.integration.repository
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.geo.Circle
-import org.springframework.data.geo.GeoResults
+import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
 import org.springframework.data.redis.connection.RedisGeoCommands
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.domain.geo.GeoLocation
+import org.springframework.data.redis.domain.geo.Metrics
 import org.springframework.stereotype.Component
-import java.math.BigDecimal
-import java.math.RoundingMode
+import tech.jaya.ridely.dto.driver.DriverLocationDto
 
 
 @Component
 class DriverLocationRepository (
+    @Qualifier("redisTemplate")
     private val geoRedisTemplate: RedisTemplate<String, String>
 ) {
+    private val searchRadiusInMeters = 150.0
     val key = "driver:locations"
 
     fun updateLocation(driverId: Long, lat: Double, lng: Double) {
         val point = Point(lng, lat)
-        val member: String = "driver:$driverId"
+        val member = "driver:$driverId"
         geoRedisTemplate.opsForGeo().add(key, point, member)
 
     }
 
-    fun findDriversNear(circle: Circle): GeoResults<RedisGeoCommands.GeoLocation<String>>? {
-        return geoRedisTemplate.opsForGeo().radius(key, circle)
+    fun findDriversNear(
+        lat: Double,
+        lng: Double,
+    ): List<Long> {
+        val circle = Circle(Point(lng, lat), Distance(searchRadiusInMeters, Metrics.METERS))
+
+        val geoResults = geoRedisTemplate.opsForGeo().radius(key, circle)
+
+        return geoResults?.content
+            ?.mapNotNull { it.content.name?.toLongOrNull() }
+            ?: emptyList()
     }
 }
+
+

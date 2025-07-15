@@ -1,25 +1,16 @@
 package tech.jaya.ridely.controller
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import tech.jaya.ridely.domain.model.Driver
+import org.springframework.web.bind.annotation.*
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.domain.repository.RideRepo
 import tech.jaya.ridely.dto.driver.AcceptResponse
-import tech.jaya.ridely.dto.driver.DriverLocationDto
 import tech.jaya.ridely.dto.trip.DriverCreation
 import tech.jaya.ridely.dto.trip.DriverResponse
 import tech.jaya.ridely.dto.trip.LatLng
 import tech.jaya.ridely.dto.trip.toResponse
 import tech.jaya.ridely.integration.producer.DriverLocationProducer
-import tech.jaya.ridely.service.driver.FindDriversNearService
+import tech.jaya.ridely.integration.repository.DriverLocationRepository
 
 @RestController
 @RequestMapping("/drivers")
@@ -27,7 +18,7 @@ class DriverController(
     private val driverRepo: DriverRepo,
     private val rideRepo: RideRepo,
     private val driverLocationProducer: DriverLocationProducer,
-    private val findDriversNearService: FindDriversNearService
+    private val driverLocationRepository: DriverLocationRepository
 ) {
 
     @GetMapping("/{id}")
@@ -68,7 +59,7 @@ class DriverController(
     }
 
     @GetMapping("/drivers/near")
-    fun getDriversNearByLocation(@RequestParam lat: Double, @RequestParam long: Double ):List<DriverLocationDto> {
-        return findDriversNearService.findDriversNear(lat, long)
+    fun getDriversNearByLocation(@RequestParam lat: Double, @RequestParam long: Double): List<Long> {
+        return driverLocationRepository.findDriversNear(lat, long)
     }
 }

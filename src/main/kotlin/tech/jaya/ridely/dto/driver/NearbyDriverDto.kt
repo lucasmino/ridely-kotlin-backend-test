@@ -4,7 +4,5 @@ data class NearbyDriverDto(
     val id: Long,
     val name: String,
     val carModel: String,
-    val licensePlate: String,
-    val lat: Double,
-    val lng: Double
+    val licensePlate: String
 )
