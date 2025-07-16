@@ -1,5 +1,6 @@
 package tech.jaya.ridely.controller
 
+import RideService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -7,7 +8,6 @@ import tech.jaya.ridely.common.logging.Loggable
 import tech.jaya.ridely.dto.ride.*
 import tech.jaya.ridely.dto.route.LatLng
 import tech.jaya.ridely.service.ride.RideEstimationService
-import tech.jaya.ridely.service.ride.RideService
 
 @RestController
 @RequestMapping("/rides")
@@ -34,37 +34,39 @@ class RideController(
 
     @GetMapping("/{id}/get-rides")
     fun getRide(@PathVariable id: Long): FinishResponse {
-        return rideService.getRide(id)
+        return rideService.get(id)
     }
 
 
     @PostMapping("/request-driver")
-    fun requestDriver(@RequestBody req: RequestDriver): RequestDriverResponse {
-        return rideService.createRideFromRequest(req)
+    fun requestRide(@RequestBody req: RequestDriver): RequestDriverResponse {
+        return rideService.createRide(req)
     }
 
     @PostMapping("/refuse-ride")
     fun refuseRide(@RequestBody req: ActionRideRequest): RefuseResponse {
-        return rideService.refuseRide(req)
+        return rideService.refuse(req)
     }
 
     @PostMapping("/cancel-ride")
     fun deleteRide(@RequestBody req: ActionRideRequest): CancelResponse {
-        return rideService.deleteRide(req)
+        return rideService.cancel(req)
     }
 
     @PostMapping("/finish-ride")
     fun finishRide(@RequestBody req: FinishRideRequest): FinishResponse {
-        return rideService.finishRide(req)
+        return rideService.finish(req)
     }
 
     @PostMapping("/accept-ride")
     fun acceptRide(@RequestBody req: ActionRideRequest): AcceptResponse {
-        return rideService.acceptRide(req)
+        return rideService.accept(req)
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
-        return rideService.delete(id)
+        rideService.delete(id)
+        return ResponseEntity.noContent().build()
     }
+
 }
