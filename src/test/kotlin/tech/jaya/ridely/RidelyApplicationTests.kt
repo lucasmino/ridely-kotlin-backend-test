@@ -23,6 +23,5 @@ class RidelyApplicationTests {
 
 	@Test
 	fun contextLoads() {
-		// apenas sobe o contexto
 	}
 }

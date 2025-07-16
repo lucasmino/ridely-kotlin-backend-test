@@ -1,6 +1,6 @@
 package tech.jaya.ridely.integration.gateway
 
-import tech.jaya.ridely.dto.trip.RouteInfo
+import tech.jaya.ridely.dto.route.RouteInfo
 
 interface MapsGateway {
     fun getRouteInfo(

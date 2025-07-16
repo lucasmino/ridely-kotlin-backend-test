@@ -11,11 +11,12 @@ import java.nio.charset.StandardCharsets
 @Component
 class GoogleGeocodingClient(
     @Value("\${google.maps.api.key}") private val apiKey: String,
+    @Value("\${google.maps.api.url}") private val url: String,
     private val restTemplate: RestTemplate
 ) : GeocodingGateway, Loggable() {
 
     override fun reverseGeocode(lat: Double, lng: Double): String {
-        val url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey"
+        val url = "$url+$apiKey"
         val response = restTemplate.getForObject(url, GoogleGeocodeResponse::class.java)
         val adress = response?.results?.firstOrNull()?.formatted_address ?: "Address not found"
         log.info("the adress formated is:"+adress)
@@ -32,6 +33,8 @@ class GoogleGeocodingClient(
 
         val location = response.results.firstOrNull()?.geometry?.location
             ?: throw RuntimeException("Address not found")
+
+        log.info("the location formated is:"+Pair(location.lat, location.lng))
 
         return Pair(location.lat, location.lng)
     }

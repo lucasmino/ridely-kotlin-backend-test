@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest
-import tech.jaya.ridely.dto.trip.LatLng
+import tech.jaya.ridely.dto.route.LatLng
 
 @Component
 class DriverLocationProducer(

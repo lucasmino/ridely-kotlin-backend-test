@@ -1,49 +1,46 @@
 package tech.jaya.ridely.controller
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import tech.jaya.ridely.dto.driver.AcceptResponse
-import tech.jaya.ridely.dto.driver.ActionRideRequest
-import tech.jaya.ridely.dto.driver.CancelResponse
-import tech.jaya.ridely.dto.driver.FinishResponse
-import tech.jaya.ridely.dto.driver.FinishRideRequest
-import tech.jaya.ridely.dto.driver.RefuseResponse
-import tech.jaya.ridely.dto.driver.RequestDriver
-import tech.jaya.ridely.dto.driver.RequestDriverResponse
-import tech.jaya.ridely.dto.trip.LatLng
-import tech.jaya.ridely.dto.trip.TripEstimationResponse
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.*
+import tech.jaya.ridely.common.logging.Loggable
+import tech.jaya.ridely.dto.ride.*
+import tech.jaya.ridely.dto.route.LatLng
+import tech.jaya.ridely.service.ride.RideEstimationService
 import tech.jaya.ridely.service.ride.RideService
-import tech.jaya.ridely.service.trip.RouteEstimationService
 
 @RestController
 @RequestMapping("/rides")
 class RideController(
     private val rideService: RideService,
-    private val routeEstimationService: RouteEstimationService
-) {
+    private val rideEstimationService: RideEstimationService
+) : Loggable() {
 
-    @GetMapping
+    @GetMapping("/estimate")
+    @PreAuthorize("hasRole('PASSENGER')")
     fun estimateTrip(
         @RequestParam originLat: Double,
         @RequestParam originLng: Double,
         @RequestParam destLat: Double,
         @RequestParam destLng: Double
-    ): TripEstimationResponse {
-        val origin = LatLng(originLat, originLng)
-        val dest = LatLng(destLat, destLng)
-        return routeEstimationService.estimateTrip(origin, dest)
+    ): RideEstimationWithDriversResponse {
+        val origin = LatLng(latitude = originLat, longitude = originLng)
+        val dest = LatLng(latitude = destLat, longitude = destLng)
+
+        log.info("Request to estimate route from $origin to $dest")
+
+        return rideEstimationService.estimateTrip(origin, dest)
     }
+
+    @GetMapping("/{id}/get-rides")
+    fun getRide(@PathVariable id: Long): FinishResponse {
+        return rideService.getRide(id)
+    }
+
 
     @PostMapping("/request-driver")
     fun requestDriver(@RequestBody req: RequestDriver): RequestDriverResponse {
-        return rideService.requestRide(req)
+        return rideService.createRideFromRequest(req)
     }
 
     @PostMapping("/refuse-ride")

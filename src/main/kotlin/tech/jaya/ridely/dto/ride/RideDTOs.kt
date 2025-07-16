@@ -1,4 +1,4 @@
-package tech.jaya.ridely.dto.driver
+package tech.jaya.ridely.dto.ride
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import tech.jaya.ridely.domain.model.Driver
@@ -32,9 +32,7 @@ class RequestDriver(
 
 data class FinishRideRequest(
     @JsonProperty(required = true)
-    val id: Long,
-    @JsonProperty(required = true)
-    val price: BigDecimal
+    val id: Long
 )
 
 data class ActionRideRequest(
@@ -147,7 +145,7 @@ class AcceptResponse private constructor(
     val status: Status,
 ) {
     companion object {
-        fun fromRide(ride: Ride) = AcceptResponse(
+        fun fromRide(ride: Ride): AcceptResponse = AcceptResponse(
             id = ride.id!!,
             passenger = PassengerResponse(ride.passengerName!!, ride.passengerEmail!!),
             pickUp = ride.pickUp!!,

@@ -10,4 +10,7 @@ aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://
 
 comando para inserir localizações no redis manualmente
 GEOADD driver:locations -46.57421 -23.55052 1
+comando para consultar os dados armazenados GEOPOS driver:locations driver:<id do motorista>
 
+
+comando docker para subir o ambiente :  docker compose up -d

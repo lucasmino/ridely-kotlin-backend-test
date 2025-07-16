@@ -1,8 +1,8 @@
-package tech.jaya.ridely.dto.trip
+package tech.jaya.ridely.dto.ride
 
 import java.math.BigDecimal
 
-data class TripEstimationResponse (
+data class RideEstimationResponse (
     val estimatedTimeMinutes: Int,
     val distanceKm: Double,
     val estimatedPrice: BigDecimal

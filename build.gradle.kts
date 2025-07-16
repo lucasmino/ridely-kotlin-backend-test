@@ -51,13 +51,14 @@ dependencies {
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:3.0.2")
 
 	implementation("me.paulschwarz:spring-dotenv:3.0.0")
+	testImplementation(kotlin("test"))
+	testImplementation("io.mockk:mockk:1.13.10")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+
+
 
 
 }
-
-//tasks.test {
-//	ignoreFailures = true
-//}
 
 
 tasks.withType<KotlinCompile> {

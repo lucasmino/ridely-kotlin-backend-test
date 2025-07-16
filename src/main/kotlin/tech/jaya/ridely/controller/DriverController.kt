@@ -4,11 +4,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import tech.jaya.ridely.domain.repository.DriverRepo
 import tech.jaya.ridely.domain.repository.RideRepo
-import tech.jaya.ridely.dto.driver.AcceptResponse
-import tech.jaya.ridely.dto.trip.DriverCreation
-import tech.jaya.ridely.dto.trip.DriverResponse
-import tech.jaya.ridely.dto.trip.LatLng
-import tech.jaya.ridely.dto.trip.toResponse
+import tech.jaya.ridely.dto.route.DriverCreation
+import tech.jaya.ridely.dto.route.DriverResponse
+import tech.jaya.ridely.dto.route.LatLng
+import tech.jaya.ridely.dto.route.toResponse
 import tech.jaya.ridely.integration.producer.DriverLocationProducer
 import tech.jaya.ridely.integration.repository.DriverLocationRepository
 
@@ -16,7 +15,6 @@ import tech.jaya.ridely.integration.repository.DriverLocationRepository
 @RequestMapping("/drivers")
 class DriverController(
     private val driverRepo: DriverRepo,
-    private val rideRepo: RideRepo,
     private val driverLocationProducer: DriverLocationProducer,
     private val driverLocationRepository: DriverLocationRepository
 ) {
@@ -30,13 +28,6 @@ class DriverController(
         }
     }
 
-    @GetMapping("/{id}/get-rides")
-    fun getRide(@PathVariable id: Long): AcceptResponse {
-        val ride = rideRepo.findLastRideByDriveId(id).orElseThrow {
-            throw RideNotFoundException("You don't have any Ride")
-        }
-        return AcceptResponse.fromRide(ride)
-    }
 
     @PostMapping
     fun save(@RequestBody driverRequest: DriverCreation): ResponseEntity<DriverResponse> {

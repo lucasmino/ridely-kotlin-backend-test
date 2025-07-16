@@ -1,8 +1,3 @@
-Integração JWT ou OAuth2
-
-- Persistência assíncrona de eventos com Kafka
-- Rate limiting via Spring Cloud Gateway ou Bucket4J
-- Internacionalização de mensagens e respostas
 
 | Recurso            | Como ajuda na escalabilidade              |
 |--------------------|-------------------------------------------|

@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.geo.Circle
 import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
-import org.springframework.data.redis.connection.RedisGeoCommands
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.domain.geo.Metrics
 import org.springframework.stereotype.Component
-import tech.jaya.ridely.dto.driver.DriverLocationDto
 
 
 @Component
@@ -21,7 +19,7 @@ class DriverLocationRepository (
 
     fun updateLocation(driverId: Long, lat: Double, lng: Double) {
         val point = Point(lng, lat)
-        val member = "driver:$driverId"
+        val member = driverId.toString()
         geoRedisTemplate.opsForGeo().add(key, point, member)
 
     }

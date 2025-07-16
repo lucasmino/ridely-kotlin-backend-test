@@ -1,13 +1,13 @@
-package tech.jaya.ridely.service.trip
+package tech.jaya.ridely.service.ride
 
 import org.springframework.stereotype.Service
 import tech.jaya.ridely.common.logging.Loggable
-import tech.jaya.ridely.dto.trip.RouteInfo
+import tech.jaya.ridely.dto.route.RouteInfo
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 @Service
-class PriceCalculatorService : Loggable() {
+class RidePriceCalculatorService : Loggable() {
     fun calculatePrice(routeInfo: RouteInfo): BigDecimal {
         log.info("Calculating price for route: distance=${routeInfo.distanceKm}, time=${routeInfo.estimatedTimeMinutes}")
         try {
@@ -25,7 +25,7 @@ class PriceCalculatorService : Loggable() {
             return finalPrice
         } catch (ex: Exception) {
             log.error("Failed to calculate price for route: $routeInfo", ex)
-            throw IllegalArgumentException("Could not calculate trip price", ex)
+            throw IllegalArgumentException("Could not calculate route price", ex)
         }
     }
 }

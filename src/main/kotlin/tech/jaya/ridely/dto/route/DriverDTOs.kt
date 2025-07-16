@@ -1,4 +1,4 @@
-package tech.jaya.ridely.dto.trip
+package tech.jaya.ridely.dto.route
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import tech.jaya.ridely.domain.model.Driver
