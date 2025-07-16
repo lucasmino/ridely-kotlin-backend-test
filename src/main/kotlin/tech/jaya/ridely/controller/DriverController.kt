@@ -10,47 +10,48 @@ import tech.jaya.ridely.dto.route.LatLng
 import tech.jaya.ridely.dto.route.toResponse
 import tech.jaya.ridely.integration.producer.DriverLocationProducer
 import tech.jaya.ridely.integration.repository.DriverLocationRepository
+import tech.jaya.ridely.service.driver.DriverLocationService
+import tech.jaya.ridely.service.driver.DriverService
 
 @RestController
 @RequestMapping("/drivers")
 class DriverController(
-    private val driverRepo: DriverRepo,
-    private val driverLocationProducer: DriverLocationProducer,
-    private val driverLocationRepository: DriverLocationRepository
+    private val driverService: DriverService,
+    private val driverLocationService: DriverLocationService
 ) {
-
-    @GetMapping("/{id}")
-    fun findById(@PathVariable id: Long): ResponseEntity<DriverResponse> {
-        return driverRepo.findById(id).orElseThrow {
-            DriverNotFound("Drive not found $id")
-        }.let {
-            ResponseEntity.ok(it.toResponse())
-        }
-    }
-
 
     @PostMapping
     fun save(@RequestBody driverRequest: DriverCreation): ResponseEntity<DriverResponse> {
-        println("🚗 RECEIVED: $driverRequest")
-        return driverRepo.save(driverRequest.toDriver()).let {
-            ResponseEntity.ok(it.toResponse())
-        }
+        val driver = driverService.save(driverRequest)
+        return ResponseEntity.ok(driver.toResponse())
+    }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): ResponseEntity<DriverResponse> {
+        val driver = driverService.findById(id)
+        return ResponseEntity.ok(driver.toResponse())
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
-        return driverRepo.deleteById(id).let {
-            ResponseEntity.noContent().build()
-        }
+        driverService.deleteById(id)
+        return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("/drivers/{id}/location")
-    fun updateLocation(@PathVariable id: String, @RequestParam lat: Double, @RequestParam long: Double) {
-        driverLocationProducer.sendLocation(id, LatLng(lat, long))
+    @PostMapping("/{id}/location")
+    fun updateLocation(
+        @PathVariable id: String,
+        @RequestParam lat: Double,
+        @RequestParam long: Double
+    ) {
+        driverLocationService.updateLocation(id, lat, long)
     }
 
-    @GetMapping("/drivers/near")
-    fun getDriversNearByLocation(@RequestParam lat: Double, @RequestParam long: Double): List<Long> {
-        return driverLocationRepository.findDriversNear(lat, long)
+    @GetMapping("/near")
+    fun getDriversNear(
+        @RequestParam lat: Double,
+        @RequestParam long: Double
+    ): List<Long> {
+        return driverLocationService.findDriversNear(lat, long)
     }
 }
