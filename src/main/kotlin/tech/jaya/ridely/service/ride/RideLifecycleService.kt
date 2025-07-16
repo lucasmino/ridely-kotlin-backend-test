@@ -1,3 +1,5 @@
+package tech.jaya.ridely.service.ride
+
 import org.springframework.stereotype.Service
 import tech.jaya.ridely.controller.RideNotFoundException
 import tech.jaya.ridely.domain.model.Ride

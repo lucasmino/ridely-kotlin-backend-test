@@ -1,8 +1,9 @@
+package tech.jaya.ridely.service.ride
+
 import org.springframework.stereotype.Service
 import tech.jaya.ridely.dto.ride.ActionRideRequest
 import tech.jaya.ridely.dto.ride.FinishRideRequest
 import tech.jaya.ridely.dto.ride.RequestDriver
-import tech.jaya.ridely.service.ride.RideCreationService
 
 @Service
 class RideService(

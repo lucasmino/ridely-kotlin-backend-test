@@ -1,6 +1,6 @@
 package tech.jaya.ridely.controller
 
-import RideService
+import tech.jaya.ridely.service.ride.RideService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
