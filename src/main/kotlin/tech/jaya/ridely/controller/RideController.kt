@@ -1,68 +1,72 @@
 package tech.jaya.ridely.controller
 
+import tech.jaya.ridely.service.ride.RideService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import tech.jaya.ridely.repository.DriverRepo
-import tech.jaya.ridely.repository.RideRepo
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.*
+import tech.jaya.ridely.common.logging.Loggable
+import tech.jaya.ridely.dto.ride.*
+import tech.jaya.ridely.dto.route.LatLng
+import tech.jaya.ridely.service.ride.RideEstimationService
 
 @RestController
 @RequestMapping("/rides")
 class RideController(
-    private val rideRepo: RideRepo,
-    private val driverRepo: DriverRepo
-) {
+    private val rideService: RideService,
+    private val rideEstimationService: RideEstimationService
+) : Loggable() {
+
+    @GetMapping("/estimate")
+    @PreAuthorize("hasRole('PASSENGER')")
+    fun estimateTrip(
+        @RequestParam originLat: Double,
+        @RequestParam originLng: Double,
+        @RequestParam destLat: Double,
+        @RequestParam destLng: Double
+    ): RideEstimationWithDriversResponse {
+        val origin = LatLng(latitude = originLat, longitude = originLng)
+        val dest = LatLng(latitude = destLat, longitude = destLng)
+
+        log.info("Request to estimate route from $origin to $dest")
+
+        return rideEstimationService.estimateTrip(origin, dest)
+    }
+
+    @GetMapping("/{id}/get-rides")
+    fun getRide(@PathVariable id: Long): FinishResponse {
+        return rideService.get(id)
+    }
+
 
     @PostMapping("/request-driver")
-    fun requestDriver(@RequestBody req: RequestDriver): RequestDriverResponse {
-        val driver = driverRepo.findAvailableDriver().orElseThrow {
-            throw DriverUnavailable("We do not have drivers available")
-        }
-        val ride = req.toRide(driver)
-        ride.request(driver)
-        return RequestDriverResponse.fromRide(rideRepo.save(ride))
+    fun requestRide(@RequestBody req: RequestDriver): RequestDriverResponse {
+        return rideService.createRide(req)
     }
 
     @PostMapping("/refuse-ride")
     fun refuseRide(@RequestBody req: ActionRideRequest): RefuseResponse {
-        val id = req.id
-        val ride = rideRepo.findById(id).orElseThrow { RideNotFoundException("No ride found with id $id") }
-        ride.refuse()
-        return RefuseResponse.fromRide(rideRepo.save(ride))
+        return rideService.refuse(req)
     }
 
     @PostMapping("/cancel-ride")
     fun deleteRide(@RequestBody req: ActionRideRequest): CancelResponse {
-        val id = req.id
-        val ride = rideRepo.findById(id).orElseThrow { RideNotFoundException("No ride found with id $id") }
-        ride.cancel()
-        return CancelResponse.fromRide(rideRepo.save(ride))
+        return rideService.cancel(req)
     }
 
     @PostMapping("/finish-ride")
     fun finishRide(@RequestBody req: FinishRideRequest): FinishResponse {
-        val (id, price) = req
-        val ride = rideRepo.findById(id).orElseThrow { RideNotFoundException("No ride found with id $id") }
-        ride.complete(price)
-        return FinishResponse.fromRide(rideRepo.save(ride))
+        return rideService.finish(req)
     }
 
     @PostMapping("/accept-ride")
     fun acceptRide(@RequestBody req: ActionRideRequest): AcceptResponse {
-        val id = req.id
-        val ride = rideRepo.findById(id).orElseThrow { RideNotFoundException("No ride found with id $id") }
-        ride.accept()
-        return AcceptResponse.fromRide(rideRepo.save(ride))
+        return rideService.accept(req)
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
-        return rideRepo.deleteById(id).let {
-            ResponseEntity.noContent().build()
-        }
+        rideService.delete(id)
+        return ResponseEntity.noContent().build()
     }
+
 }

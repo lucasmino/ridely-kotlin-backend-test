@@ -1,4 +1,4 @@
-package tech.jaya.ridely.model
+package tech.jaya.ridely.domain.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -86,7 +86,7 @@ class Ride(
         status = Status.IN_PROGRESS
     }
 
-    fun complete(price: BigDecimal) {
+    fun complete() {
         if (status != Status.IN_PROGRESS) {
             throw RideInvalidState("Ride cannot be finished in status $status")
         }
@@ -94,7 +94,6 @@ class Ride(
             throw RideInvalidState("Ride cannot be finished without a driver")
         }
         driver!!.becomeAvailable()
-        this.price = price
         status = Status.COMPLETED
     }
 

@@ -2,6 +2,7 @@ package tech.jaya.ridely.model
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import tech.jaya.ridely.domain.model.Driver
 
 class DriverTest {
 

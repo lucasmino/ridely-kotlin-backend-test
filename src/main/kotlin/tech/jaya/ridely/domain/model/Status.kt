@@ -1,4 +1,4 @@
-package tech.jaya.ridely.model
+package tech.jaya.ridely.domain.model
 
 /**
  * An enum class representing the status of a Ride in the system.

@@ -1,13 +1,46 @@
-version: '3.1'
-
 services:
   db:
-    image: mysql:latest
+    image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD:-ridely@123}
-      MYSQL_DATABASE: ${DATABASE_NAME:-ridely}
-      MYSQL_USER: ${DATABASE_USERNAME:-ridely}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-ridely@123}
+      MYSQL_ROOT_PASSWORD: "ridely123"
+      MYSQL_DATABASE: "ridely"
+      MYSQL_USER: "ridely"
+      MYSQL_PASSWORD: "ridely123"
     ports:
-      - ${DATABASE_PORT:-3306}:3306
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ridely-net
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: sqs
+      DEBUG: 1
+      DATA_DIR: /tmp/localstack/data
+      DEFAULT_REGION: us-east-1
+    volumes:
+      - ./.localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - ridely-net
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ridely-net
+
+networks:
+  ridely-net:
+    driver: bridge
+
+volumes:
+  mysql_data:

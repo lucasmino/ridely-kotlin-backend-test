@@ -1,51 +1,57 @@
 package tech.jaya.ridely.controller
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import tech.jaya.ridely.repository.DriverRepo
-import tech.jaya.ridely.repository.RideRepo
+import org.springframework.web.bind.annotation.*
+import tech.jaya.ridely.domain.repository.DriverRepo
+import tech.jaya.ridely.domain.repository.RideRepo
+import tech.jaya.ridely.dto.route.DriverCreation
+import tech.jaya.ridely.dto.route.DriverResponse
+import tech.jaya.ridely.dto.route.LatLng
+import tech.jaya.ridely.dto.route.toResponse
+import tech.jaya.ridely.integration.producer.DriverLocationProducer
+import tech.jaya.ridely.integration.repository.DriverLocationRepository
+import tech.jaya.ridely.service.driver.DriverLocationService
+import tech.jaya.ridely.service.driver.DriverService
 
 @RestController
 @RequestMapping("/drivers")
 class DriverController(
-    private val driverRepo: DriverRepo,
-    private val rideRepo: RideRepo
+    private val driverService: DriverService,
+    private val driverLocationService: DriverLocationService
 ) {
-
-    @GetMapping("/{id}")
-    fun findById(@PathVariable id: Long): ResponseEntity<DriverResponse> {
-        return driverRepo.findById(id).orElseThrow {
-            DriverNotFound("Drive not found $id")
-        }.let {
-            ResponseEntity.ok(it.toResponse())
-        }
-    }
-
-    @GetMapping("/{id}/get-rides")
-    fun getRide(@PathVariable id: Long): AcceptResponse {
-        val ride = rideRepo.findLastRideByDriveId(id).orElseThrow {
-            throw RideNotFoundException("You don't have any Ride")
-        }
-        return AcceptResponse.fromRide(ride)
-    }
 
     @PostMapping
     fun save(@RequestBody driverRequest: DriverCreation): ResponseEntity<DriverResponse> {
-        return driverRepo.save(driverRequest.toDriver()).let {
-            ResponseEntity.ok(it.toResponse())
-        }
+        val driver = driverService.save(driverRequest)
+        return ResponseEntity.ok(driver.toResponse())
+    }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): ResponseEntity<DriverResponse> {
+        val driver = driverService.findById(id)
+        return ResponseEntity.ok(driver.toResponse())
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
-        return driverRepo.deleteById(id).let {
-            ResponseEntity.noContent().build()
-        }
+        driverService.deleteById(id)
+        return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/{id}/location")
+    fun updateLocation(
+        @PathVariable id: String,
+        @RequestParam lat: Double,
+        @RequestParam long: Double
+    ) {
+        driverLocationService.updateLocation(id, lat, long)
+    }
+
+    @GetMapping("/near")
+    fun getDriversNear(
+        @RequestParam lat: Double,
+        @RequestParam long: Double
+    ): List<Long> {
+        return driverLocationService.findDriversNear(lat, long)
     }
 }

@@ -19,11 +19,13 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://repo.spring.io/milestone") }
 }
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	runtimeOnly("com.h2database:h2")
@@ -38,11 +40,26 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.flywaydb:flyway-core:$flywayVersion")
 	implementation("com.mysql:mysql-connector-j:8.4.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
 
 	runtimeOnly("org.flywaydb:flyway-mysql:$flywayVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	//aws tools
+	implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:3.0.2")
+
+	implementation("me.paulschwarz:spring-dotenv:3.0.0")
+	testImplementation(kotlin("test"))
+	testImplementation("io.mockk:mockk:1.13.10")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+
+
+
+
 }
+
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
